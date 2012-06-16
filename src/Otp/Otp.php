@@ -72,6 +72,10 @@ class Otp implements OtpInterface
 	*/
 	public function hotp($secret, $counter)
 	{
+		if (!is_numeric($counter)) {
+			throw new \InvalidArgumentException('Counter must be integer');
+		}
+		
 		$hash = hash_hmac(
 				$this->algorithm,
 				$this->getBinaryCounter($counter),

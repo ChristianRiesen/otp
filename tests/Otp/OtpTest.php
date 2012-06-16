@@ -18,6 +18,8 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 	 */
 	private $Otp;
 	
+	private $secret = "12345678901234567890";
+	
 	/**
 	 * Prepares the environment before running a test.
 	 */
@@ -47,7 +49,7 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testHotpRfc()
 	{
-		$secret = "12345678901234567890";
+		$secret = $this->secret;
 	
 		$this->assertEquals('755224', $this->Otp->hotp($secret, 0));
 		$this->assertEquals('287082', $this->Otp->hotp($secret, 1));
@@ -71,7 +73,7 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testTotpRfc()
 	{
-		$secret = "12345678901234567890";
+		$secret = $this->secret;
 		
 		// Test vectors are in 8 digits
 		$this->Otp->setDigits(8);
@@ -110,6 +112,15 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('38618901', $this->Otp->hotp($secret,  floor(2000000000/30)), 'sha512 with time 2000000000');
 		$this->assertEquals('47863826', $this->Otp->hotp($secret, floor(20000000000/30)), 'sha512 with time 20000000000');
 		*/
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Counter must be integer
+	 */
+	public function testHotpInvalidCounter()
+	{
+		$this->Otp->hotp($this->secret, 'a');
 	}
 
 }
