@@ -14,6 +14,7 @@ use Otp\Base32;
 use Otp\GoogleAuthenticator;
 
 // Getting a secret, either by generating or from storage
+// DON'T use sessions as storage for this in production!!!
 $secret = 0;
 
 if (isset($_SESSION['otpsecret'])) {
@@ -82,6 +83,10 @@ if (isset($_POST['otpkey'])) {
 		// to use it here!
 		if ($otp->checkTotp(Base32::decode($secret), $key)) {
 			echo 'Key correct!';
+			// Add here something that makes note of this key and will not allow
+			// the use of it, for this user for the next 2 minutes. This way you
+			// prevent a replay attack. Otherwise your OTP is missing one of the
+			// key features it can bring in security to your application!
 		} else {
 			echo 'Wrong key!';
 		}

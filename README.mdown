@@ -44,6 +44,8 @@ $key = $otp->totp($secret);
 
 ```
 
+Sample script in `example` folder. Requires sessions to work (for secret storage).
+
 Class Otp
 ---------
 
