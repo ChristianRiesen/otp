@@ -2,6 +2,10 @@
 namespace Otp;
 
 /**
+ * One Time Passwords
+ *
+ * Last update: 2012-06-16
+ *
  * Implements HOTP and TOTP
  *
  * HMAC-Based One-time Password(HOTP) algorithm specified in RFC 4226
@@ -18,6 +22,7 @@ namespace Otp;
  *
  * @author Christian Riesen <chris.riesen@gmail.com>
  * @link http://christianriesen.com
+ * @license MIT License see LICENSE file
  */
 
 class Otp implements OtpInterface
@@ -34,22 +39,32 @@ class Otp implements OtpInterface
 	
 	/**
 	 * Time in seconds one counter period is long
-	 * 
+	 *
 	 * @var integer
 	 */
 	protected $period = 30;
 	
 	/**
 	 * Range to allow for timedrift
-	 * 
+	 *
 	 * Used in checkTotp only. This value means it will check the current
 	 * totp and the two before it, as well as the two after it.
 	 * @var integer
 	 */
 	protected $timerange = 2;
 	
+	/**
+	 * Possible algorithms
+	 *
+	 * @var array
+	 */
 	protected $allowedAlgorithms = array('sha1', 'sha256', 'sha512');
 	
+	/**
+	 * Currently used algorithm
+	 *
+	 * @var string
+	 */
 	protected $algorithm = 'sha1';
 	
 	/* (non-PHPdoc)
@@ -121,11 +136,23 @@ class Otp implements OtpInterface
 		return false;
 	}
 	
+	/**
+	 * Changing the used algorithm for hashing
+	 *
+	 * Can only be one of the algorithms in the allowedAlgorithms property.
+	 *
+	 * @param string $algorithm
+	 * @throws \InvalidArgumentException
+	 * @return \Otp\Otp
+	 */
+	
 	/*
 	 * This has been disabled since it does not bring the expected results
 	 * according to the RFC test vectors for sha256 or sha512.
 	 * Until that is fixed, the algorithm simply stays at sha1.
-	 * Google Authenticator does not support sha256 and sha512 anyways.
+	 * Google Authenticator does not support sha256 and sha512 at the moment.
+	 *
+	
 	public function setAlgorithm($algorithm)
 	{
 		if (!in_array($algorithm, $this->allowedAlgorithms)) {
@@ -136,12 +163,29 @@ class Otp implements OtpInterface
 		
 		return $this;
 	}
-	*/
+	// */
 	
+	/**
+	 * Get the algorithms name (lowercase)
+	 *
+	 * @return string
+	 */
+	public function getAlgorithm()
+	{
+		return $this->algorithm;
+	}
+	
+	/**
+	 * Setting period lenght for totp
+	 *
+	 * @param integer $period
+	 * @throws \InvalidArgumentException
+	 * @return \Otp\Otp
+	 */
 	public function setPeriod($period)
 	{
 		if (!is_int($period)) {
-			throw new \InvalidArgumentException('Period has to be an integer');
+			throw new \InvalidArgumentException('Period must be an integer');
 		}
 		
 		$this->period = $period;
@@ -149,10 +193,27 @@ class Otp implements OtpInterface
 		return $this;
 	}
 	
+	/**
+	 * Returns the set period value
+	 *
+	 * @return integer
+	 */
+	public function getPeriod()
+	{
+		return $this->period;
+	}
+	
+	/**
+	 * Setting number of otp digits
+	 *
+	 * @param integer $digits Number of digits for the otp (6 or 8)
+	 * @throws \InvalidArgumentException
+	 * @return \Otp\Otp
+	 */
 	public function setDigits($digits)
 	{
 		if (!in_array($digits, array(6, 8))) {
-			throw new \InvalidArgumentException('Digits has to be 6 or 8');
+			throw new \InvalidArgumentException('Digits must be 6 or 8');
 		}
 		
 		$this->digits = $digits;
@@ -161,10 +222,20 @@ class Otp implements OtpInterface
 	}
 	
 	/**
+	 * Returns number of digits in the otp
+	 *
+	 * @return integer
+	 */
+	public function getDigits()
+	{
+		return $this->digits;
+	}
+	
+	/**
 	 * Generates a binary counter for hashing
-	 * 
+	 *
 	 * Warning: Not 2038 safe. Maybe until then pack supports 64bit.
-	 * 
+	 *
 	 * @param integer $counter Counter in integer form
 	 * @return string Binary string
 	 */
@@ -175,9 +246,9 @@ class Otp implements OtpInterface
 	
 	/**
 	 * Generating time counter
-	 * 
-	 * This is the time divided by 30 by default. Can be different
-	 * 
+	 *
+	 * This is the time divided by 30 by default.
+	 *
 	 * @return integer Time counter
 	 */
 	protected function getTimecounter()
@@ -187,9 +258,10 @@ class Otp implements OtpInterface
 	
 	/**
 	 * Creates the basic number for otp from hash
-	 * 
-	 * This number is left padded with zeros to the required length.
-	 * 
+	 *
+	 * This number is left padded with zeros to the required length by the
+	 * calling function.
+	 *
 	 * @param string $hash hmac hash
 	 * @return number
 	 */
@@ -207,12 +279,12 @@ class Otp implements OtpInterface
 	
 	/**
 	 * Safely compares two inputs
-	 * 
-	 * Assumed inputs are numbers an strings.
+	 *
+	 * Assumed inputs are numbers and strings.
 	 * Compares them in a time linear manner. No matter how much you guess
 	 * correct of the partial content, it does not change the time it takes to
 	 * run the entire comparison.
-	 * 
+	 *
 	 * @param mixed $a
 	 * @param mixed $b
 	 * @return boolean

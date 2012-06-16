@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../../src/Otp/Base32.php';
 
 require_once 'PHPUnit/Framework/TestCase.php';
@@ -8,27 +9,8 @@ use Otp\Base32;
 /**
  * Base32 test case.
  */
-class Base32Test extends PHPUnit_Framework_TestCase
+class Base32Test extends \PHPUnit_Framework_TestCase
 {
-	
-	/**
-	 * Prepares the environment before running a test.
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-		
-	}
-	
-	/**
-	 * Cleans up the environment after running a test.
-	 */
-	protected function tearDown()
-	{
-		
-		parent::tearDown();
-	}
-	
 	/**
 	 * Tests Base32->generateRandom()
 	 *
@@ -37,14 +19,11 @@ class Base32Test extends PHPUnit_Framework_TestCase
 	 */
 	public function testGenerateRandom()
 	{
-		// Defaults to 16 chars
-		$this->assertEquals(16, strlen(Base32::generateRandom()));
-	
-		// Can be told to make a longer secret
-		$this->assertEquals(18, strlen(Base32::generateRandom(18)));
-	
 		// contains numbers 2-7 and letters A-Z in large letters, 16 chars long
 		$this->assertRegExp('/[2-7A-Z]{16}/', Base32::generateRandom());
+		
+		// Can be told to make a longer secret
+		$this->assertRegExp('/[2-7A-Z]{18}/', Base32::generateRandom(18));
 	}
 	
 	/**
@@ -83,5 +62,4 @@ class Base32Test extends PHPUnit_Framework_TestCase
 		$this->assertEquals('MZXW6YTB',         Base32::encode('fooba'));
 		$this->assertEquals('MZXW6YTBOI======', Base32::encode('foobar'));
 	}
-
 }

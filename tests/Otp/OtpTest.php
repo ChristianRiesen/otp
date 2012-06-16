@@ -1,13 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../../src/Otp/Base32.php';
-
 require_once __DIR__ . '/../../src/Otp/OtpInterface.php';
 require_once __DIR__ . '/../../src/Otp/Otp.php';
 
-
 require_once 'PHPUnit/Framework/TestCase.php';
-
 
 use Otp\Otp;
 use Otp\Base32;
@@ -15,9 +11,8 @@ use Otp\Base32;
 /**
  * Otp test case.
  */
-class OtpTest extends PHPUnit_Framework_TestCase
+class OtpTest extends \PHPUnit_Framework_TestCase
 {
-	
 	/**
 	 *
 	 * @var Otp
@@ -94,8 +89,9 @@ class OtpTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('65353130', $this->Otp->hotp($secret, floor(20000000000/30)), 'sha1 with time 20000000000');
 		
 		/*
-		The following tests do NOT pass
-		The exact reason is unclear. They are here though for completeness test vectors from the RFC
+		The following tests do NOT pass.
+		Once the otp class can deal with these correctly, they can be used again.
+		They are here for completeness test vectors from the RFC.
 		
 		// SHA 256 grouping
 		$this->Otp->setAlgorithm('sha256');
@@ -118,4 +114,3 @@ class OtpTest extends PHPUnit_Framework_TestCase
 	}
 
 }
-

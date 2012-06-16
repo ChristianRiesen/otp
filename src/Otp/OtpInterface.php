@@ -4,15 +4,17 @@ namespace Otp;
 /**
  * Interface for HOTP and TOTP
  *
+ * Last update: 2012-06-16
+ *
  * HMAC-Based One-time Password(HOTP) algorithm specified in RFC 4226
  * @link https://tools.ietf.org/html/rfc4226
  *
  * Time-based One-time Password (TOTP) algorithm specified in RFC 6238
  * @link https://tools.ietf.org/html/rfc6238
  *
- * @version 2011.06.11.19.26
  * @author Christian Riesen <chris.riesen@gmail.com>
  * @link http://christianriesen.com
+ * @license MIT License see LICENSE file
  */
 
 interface OtpInterface

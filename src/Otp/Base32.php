@@ -3,20 +3,24 @@ namespace Otp;
 
 /**
  * Base32 encoder and decoder
- * 
+ *
+ * Last update: 2012-06-16
+ *
  * RFC 4648 compliant
  * @link http://www.ietf.org/rfc/rfc4648.txt
- * 
+ *
+ * Some groundwork based on this class
+ * https://github.com/NTICompass/PHP-Base32
+ *
  * @author Christian Riesen <chris.riesen@gmail.com>
  * @link http://christianriesen.com
- * 
- * Some groundwork taken from https://github.com/NTICompass/PHP-Base32
+ * @license MIT License see LICENSE file
  */
 class Base32
 {
 	/**
 	 * Table for encoding base32
-	 * 
+	 *
 	 * @var array
 	 */
 	private static $encode = array(
@@ -57,7 +61,7 @@ class Base32
 	
 	/**
 	 * Table for decoding base32
-	 * 
+	 *
 	 * @var array
 	 */
 	private static $decode = array(
@@ -98,7 +102,7 @@ class Base32
 	
 	/**
 	 * Creates an array from a binary string into a given chunk size
-	 * 
+	 *
 	 * @param string $binaryString String to chunk
 	 * @param integer $bits Number of bits per chunk
 	 * @return array
@@ -138,7 +142,7 @@ class Base32
 	
 	/**
 	 * Encodes into base32
-	 * 
+	 *
 	 * @param string $string Clear text string
 	 * @return string Base32 encoded string
 	 */
@@ -187,7 +191,7 @@ class Base32
 	
 	/**
 	 * Decodes base32
-	 * 
+	 *
 	 * @param string $base32String Base32 encoded string
 	 * @return string Clear text string
 	 */

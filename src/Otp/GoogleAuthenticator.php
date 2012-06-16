@@ -4,13 +4,14 @@ namespace Otp;
 /**
  * Google Authenticator
  *
- * Uses Otp and Base32 classes
+ * Last update: 2012-06-16
  *
  * Can be easy used with Google Authenticator
  * @link https://code.google.com/p/google-authenticator/
  *
  * @author Christian Riesen <chris.riesen@gmail.com>
  * @link http://christianriesen.com
+ * @license MIT License see LICENSE file
  */
 
 class GoogleAuthenticator
