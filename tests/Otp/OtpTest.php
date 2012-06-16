@@ -6,7 +6,6 @@ require_once __DIR__ . '/../../src/Otp/Otp.php';
 require_once 'PHPUnit/Framework/TestCase.php';
 
 use Otp\Otp;
-use Otp\Base32;
 
 /**
  * Otp test case.
