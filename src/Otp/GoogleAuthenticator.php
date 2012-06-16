@@ -18,6 +18,9 @@ class GoogleAuthenticator
 {
 	protected static $allowedTypes = array('hotp', 'totp');
 	
+	protected static $height = 200;
+	protected static $width = 200;
+	
 	/**
 	 * Returns the QR code url
 	 *
@@ -36,7 +39,7 @@ class GoogleAuthenticator
 	public static function getQrCodeUrl($type, $label, $secret, $counter = null, $options = array())
 	{
 		// two types only..
-		if (!in_array($type, $this->allowedTypes)) {
+		if (!in_array($type, self::$allowedTypes)) {
 			throw new \InvalidArgumentException('Type has to be of allowed types list');
 		}
 		
@@ -84,7 +87,21 @@ class GoogleAuthenticator
 			$otpauth .= '&period=' . $options['period'];
 		}
 		
-		$url = 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chld=M|0&chl=' . urlencode($otpauth);
+		// Width and height can be overwritten
+		$width = self::$width;
+		
+		if (array_key_exists('width', $options) && is_numeric($options['width'])) {
+			$width = $options['width'];
+		}
+		
+		$height = self::$height;
+		
+		if (array_key_exists('height', $options) && is_numeric($options['height'])) {
+			$height = $options['height'];
+		}
+		
+		$url = 'https://chart.googleapis.com/chart?chs=' . $width . 'x'
+			 . $height . '&cht=qr&chld=M|0&chl=' . urlencode($otpauth);
 		
 		return $url;
 	}
