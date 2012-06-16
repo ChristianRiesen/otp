@@ -1,6 +1,10 @@
 One Time Passwords
 ==================
 
+[![Build Status](https://secure.travis-ci.org/ChristianRiesen/otp.png)](http://travis-ci.org/ChristianRiesen/otp)
+
+Or RDoc:
+
 Usage
 -----
 
