@@ -211,7 +211,6 @@ class Base32
 		
 		$base32String = preg_replace($pattern, '', $base32String);
 		
-		
 		$base32Array = str_split($base32String);
 		
 		$binaryArray = array();
