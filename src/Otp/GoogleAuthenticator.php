@@ -106,4 +106,25 @@ class GoogleAuthenticator
 		return $url;
 	}
 
+	/**
+	 * Creates a pseudo random Base32 string
+	 *
+	 * This could decode into anything. It's located here as a small helper
+	 * where code that might need base32 usually also needs something like this.
+	 *
+	 * @param integer $length Exact length of output string
+	 * @return string Base32 encoded random
+	 */
+	public static function generateRandom($length = 16)
+	{
+	    $keys = array_merge(range('A','Z'), range(2,7)); // No padding char
+	
+	    $string = '';
+	
+	    for ($i = 0; $i < $length; $i++) {
+	        $string .= $keys[rand(0,31)];
+	    }
+	
+	    return $string;
+	}
 }

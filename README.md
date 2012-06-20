@@ -3,6 +3,10 @@ One Time Passwords
 
 [![Build Status](https://secure.travis-ci.org/ChristianRiesen/otp.png)](http://travis-ci.org/ChristianRiesen/otp)
 
+Did you like this? Flattr it:
+
+[![Flattr otp](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/thing/719284/ChristianRiesenotp-on-GitHub)
+
 Usage
 -----
 
@@ -10,12 +14,14 @@ Usage
 <?php
 
 use Otp\Otp;
-use Otp\Base32;
 use Otp\GoogleAuthenticator;
+
+// Seperate class, see https://github.com/ChristianRiesen/base32
+use Base32\Base32;
 
 // Get a Pseudo Secret
 // Defaults to 16 characters
-$secret = Base32::generateRandom();
+$secret = GoogleAuthenticator::generateRandom();
 
 // Url for the QR code
 // Using totp method

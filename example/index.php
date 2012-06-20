@@ -22,7 +22,7 @@ if (isset($_SESSION['otpsecret'])) {
 }
 
 if (strlen($secret) != 16) {
-	$secret = Base32::generateRandom();
+	$secret = GoogleAuthenticator::generateRandom();
 	$_SESSION['otpsecret'] = $secret;
 }
 
