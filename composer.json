@@ -1,7 +1,7 @@
 {
-    "name": "ChristianRiesen/otp",
+    "name": "christian-riesen/otp",
     "type": "library",
-    "description": "One Time Passwords, hotp and totp",
+    "description": "One Time Passwords, hotp and totp according to RFC4226 and RFC6238",
     "keywords": ["otp","hotp","totp","googleauthenticator","rfc4226","rfc6238"],
     "homepage": "https://github.com/ChristianRiesen/otp",
     "license": "MIT",
