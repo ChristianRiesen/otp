@@ -7,6 +7,17 @@ Did you like this? Flattr it:
 
 [![Flattr otp](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/thing/719284/ChristianRiesenotp-on-GitHub)
 
+Installation
+------------
+
+Use [composer](http://getcomposer.org/) and require the library in your `composer.json`
+
+	{
+    	"require": {
+        	"christian-riesen/otp": "1.1.*",
+    	}
+	}
+
 Usage
 -----
 
@@ -59,14 +70,6 @@ Class Otp
 
 Implements hotp according to [RFC4226](https://tools.ietf.org/html/rfc4226) and totp according to [RFC6238](https://tools.ietf.org/html/rfc6238) (only sha1 algorithm). Once you have a secret, you can use it directly in this class to create the passwords themselves (mainly for debugging use) or use the check functions to safely check the validity of the keys. The `checkTotp` function also includes a helper to battle timedrift.
 
-Class Base32
-------------
-
-Helper class to supply [RFC4648](http://www.ietf.org/rfc/rfc4648.txt) conform base32 encoding and decoding.
-
-Static functions for decode and encode. Additional helper function to generate a pseudorandom that can be used with GoogleAuthenticator.
-
-
 Class GoogleAuthenticator
 -------------------------
 
@@ -91,9 +94,5 @@ Acknowledgements
 ----------------
 
 The classes have been inspired by many different places that were talking about otp and Google Authenticator. Thank you all for your help.
-
-Base32 is mostly based on the work of https://github.com/NTICompass/PHP-Base32
-
-Otp is a cumulation of work from many different places, optimized, cleaned up and brought into a testable form.
 
 Project setup ideas blantently taken from https://github.com/Seldaek/monolog
