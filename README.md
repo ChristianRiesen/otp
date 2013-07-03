@@ -14,7 +14,7 @@ Use [composer](http://getcomposer.org/) and require the library in your `compose
 
 	{
     	"require": {
-        	"christian-riesen/otp": "1.1.*",
+        	"christian-riesen/otp": "1.*",
     	}
 	}
 
@@ -46,8 +46,8 @@ $otp = new Otp();
 
 // $key is a 6 digit number, coming from the User
 // Assuming this is present and sanitized
-// Allows for some timedrift (2 keys before and
-// 2 keys after the present one)
+// Allows for a 1 code time drift by default
+// Third parameter can alter that behavior
 if ($otp->checkTotp(Base32::decode($secret), $key)) {
     // Correct key
     // IMPORTANT! Note this key as being used
@@ -73,7 +73,7 @@ Implements hotp according to [RFC4226](https://tools.ietf.org/html/rfc4226) and 
 Class GoogleAuthenticator
 -------------------------
 
-Single static function to generate a correct url for the QR code, so you can easy scan it with your device. Google Authenticator is opensource and avaiaible as application for iPhone and Android. This removes the burden to create such an app from the developers of websites by using this set of classes.
+Static function class to generate a correct url for the QR code, so you can easy scan it with your device. Google Authenticator is opensource and avaiaible as application for iPhone and Android. This removes the burden to create such an app from the developers of websites by using this set of classes.
 
 About
 =====
@@ -82,6 +82,8 @@ Requirements
 ------------
 
 PHP 5.3.x+
+
+Uses [Base32 class](https://github.com/ChristianRiesen/base32).
 
 If you want to run the tests, PHPUnit 3.6 or up is required.
 

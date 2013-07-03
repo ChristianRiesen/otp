@@ -19,48 +19,47 @@ namespace Otp;
 
 interface OtpInterface
 {
-	/**
-	 * Returns OTP using the HOTP algorithm
-	 *
-	 * @param string $secret
-	 * @param integer $counter
-	 * @return string One Time Password
-	 */
-	function hotp($secret, $counter);
-	
-	/**
-	 * Returns OTP using the TOTP algorithm
-	 *
-	 * @param string $secret
-	 * @param integer $timecounter Optional: Uses current time if null
-	 * @return string One Time Password
-	 */
-	function totp($secret, $timecounter = null);
-	
-	/**
-	 * Checks Hotp against a key
-	 *
-	 * This is a helper function, but is here to ensure the Totp can be checked
-	 * in the same manner.
-	 *
-	 * @param string $secret
-	 * @param integer $counter
-	 * @param string $key
-	 *
-	 * @return boolean If key is correct
-	 */
-	function checkHotp($secret, $counter, $key);
-	
-	/**
-	 * Checks Totp agains a key
-	 *
-	 * Should implement a time drift check (before and after the actual current
-	 * key)
-	 *
-	 * @param string $secret
-	 * @param integer $key
-	 *
-	 * @return boolean If key is correct
-	 */
-	function checkTotp($secret, $key);
+    /**
+     * Returns OTP using the HOTP algorithm
+     *
+     * @param string $secret
+     * @param integer $counter
+     * @return string One Time Password
+     */
+    function hotp($secret, $counter);
+    
+    /**
+     * Returns OTP using the TOTP algorithm
+     *
+     * @param string $secret
+     * @param integer $timecounter Optional: Uses current time if null
+     * @return string One Time Password
+     */
+    function totp($secret, $timecounter = null);
+    
+    /**
+     * Checks Hotp against a key
+     *
+     * This is a helper function, but is here to ensure the Totp can be checked
+     * in the same manner.
+     *
+     * @param string $secret
+     * @param integer $counter
+     * @param string $key
+     *
+     * @return boolean If key is correct
+     */
+    function checkHotp($secret, $counter, $key);
+    
+    /**
+     * Checks Totp agains a key
+     *
+     *
+     * @param string $secret
+     * @param integer $key
+     * @param integer $timedrift
+     *
+     * @return boolean If key is correct
+     */
+    function checkTotp($secret, $key, $timedrift = 1);
 }
