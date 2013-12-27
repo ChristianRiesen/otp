@@ -1,17 +1,12 @@
 <?php
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors', 1);
 
 session_start(); // using it as storage temporary
 
-require_once __DIR__ . '/../src/Otp/Base32.php';
-require_once __DIR__ . '/../src/Otp/OtpInterface.php';
-require_once __DIR__ . '/../src/Otp/Otp.php';
-require_once __DIR__ . '/../src/Otp/GoogleAuthenticator.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Otp\Otp;
-use Otp\Base32;
 use Otp\GoogleAuthenticator;
+use Base32\Base32;
 
 // Getting a secret, either by generating or from storage
 // DON'T use sessions as storage for this in production!!!
