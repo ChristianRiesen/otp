@@ -3,8 +3,6 @@
 require_once __DIR__ . '/../../src/Otp/OtpInterface.php';
 require_once __DIR__ . '/../../src/Otp/Otp.php';
 
-require_once 'PHPUnit/Framework/TestCase.php';
-
 use Otp\Otp;
 
 /**

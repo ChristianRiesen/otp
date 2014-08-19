@@ -2,8 +2,6 @@
 
 require_once __DIR__ . '/../../src/Otp/GoogleAuthenticator.php';
 
-require_once 'PHPUnit/Framework/TestCase.php';
-
 use Otp\GoogleAuthenticator;
 
 /**
