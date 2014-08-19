@@ -37,7 +37,30 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 		);
 		
 	}
+
+	/**
+	 * Tests getKeyUri
+	 */
+	public function testGetKeyUri()
+	{
+		$secret = 'MEP3EYVA6XNFNVNM'; // testing secret
+		
+		// Standard totp case
+		$this->assertEquals(
+			'otpauth://totp/user@host.com?secret=MEP3EYVA6XNFNVNM',
+			GoogleAuthenticator::getKeyUri('totp', 'user@host.com', $secret)
+		);
+		
+		// hotp (include a counter)
+		$this->assertEquals(
+			'otpauth://hotp/user@host.com?secret=MEP3EYVA6XNFNVNM&counter=1234',
+			GoogleAuthenticator::getKeyUri('hotp', 'user@host.com', $secret, 1234)
+		);
+	}
 	
+	/**
+	 * Tests generateRandom
+	 */
 	public function testGenerateRandom()
 	{
 	    // contains numbers 2-7 and letters A-Z in large letters, 16 chars long
