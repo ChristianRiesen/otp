@@ -28,6 +28,7 @@ $otp = new Otp();
 $currentTotp = $otp->totp(Base32::decode($secret));
 
 $qrCode = GoogleAuthenticator::getQrCodeUrl('totp', 'otpsample@cr', $secret);
+$keyUri = GoogleAuthenticator::getKeyUri('totp', 'otpsample@cr', $secret);
 
 ?><html>
 <head>
@@ -44,6 +45,8 @@ Secret is <?php echo $secret; ?>. This is saved with the users credentials.
 
 QR Code for totp:<br />
 <img src="<?php echo $qrCode; ?>" />
+<br />
+This QR Code contains the Key URI: <?php echo $keyUri; ?>
 <br />
 <hr />
 

@@ -4,7 +4,7 @@ namespace Otp;
 /**
  * Google Authenticator
  *
- * Last update: 2012-06-16
+ * Last update: 2014-08-19
  *
  * Can be easy used with Google Authenticator
  * @link https://code.google.com/p/google-authenticator/
@@ -22,7 +22,7 @@ class GoogleAuthenticator
     protected static $width = 200;
     
     /**
-     * Returns the QR code url
+     * Returns the Key URI
      *
      * Format of encoded url is here:
      * https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
@@ -34,9 +34,9 @@ class GoogleAuthenticator
      * @param integer $counter Required by hotp, otherwise ignored
      * @param array $options Optional fields that will be set if present
      *
-     * @return string URL to the QR code
+     * @return string Key URI
      */
-    public static function getQrCodeUrl($type, $label, $secret, $counter = null, $options = array())
+    public static function getKeyUri($type, $label, $secret, $counter = null, $options = array())
     {
         // two types only..
         if (!in_array($type, self::$allowedTypes)) {
@@ -86,7 +86,28 @@ class GoogleAuthenticator
         if ($type == 'totp' && array_key_exists('period', $options)) {
             $otpauth .= '&period=' . $options['period'];
         }
-        
+
+        return $otpauth;
+    }
+
+    
+    /**
+     * Returns the QR code url
+     *
+     * Format of encoded url is here:
+     * https://code.google.com/p/google-authenticator/wiki/KeyUriFormat
+     * Should be done in a better fashion
+     *
+     * @param string $type totp or hotp
+     * @param string $label Label to display this as to the user
+     * @param string $secret Base32 encoded secret
+     * @param integer $counter Required by hotp, otherwise ignored
+     * @param array $options Optional fields that will be set if present
+     *
+     * @return string URL to the QR code
+     */
+    public static function getQrCodeUrl($type, $label, $secret, $counter = null, $options = array())
+    {
         // Width and height can be overwritten
         $width = self::$width;
         
@@ -99,7 +120,9 @@ class GoogleAuthenticator
         if (array_key_exists('height', $options) && is_numeric($options['height'])) {
             $height = $options['height'];
         }
-        
+
+        $otpauth = self::getKeyUri($type, $label, $secret, $counter, $options);
+
         $url = 'https://chart.googleapis.com/chart?chs=' . $width . 'x'
              . $height . '&cht=qr&chld=M|0&chl=' . urlencode($otpauth);
         
