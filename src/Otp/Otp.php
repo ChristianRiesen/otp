@@ -306,6 +306,5 @@ class Otp implements OtpInterface
         
         return $result == 0;
     }
-
-
 }
+
