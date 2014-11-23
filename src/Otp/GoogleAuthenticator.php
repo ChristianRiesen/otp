@@ -87,6 +87,12 @@ class GoogleAuthenticator
             $otpauth .= '&period=' . $options['period'];
         }
 
+        // issuer
+        // Defaults to none
+        if (array_key_exists('issuer', $options)) {
+            $otpauth .= '&issuer=' . $options['issuer'];
+        }
+
         return $otpauth;
     }
 
