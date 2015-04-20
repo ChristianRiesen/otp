@@ -17,10 +17,10 @@ namespace Otp;
 class GoogleAuthenticator
 {
     protected static $allowedTypes = array('hotp', 'totp');
-    
+
     protected static $height = 200;
     protected static $width = 200;
-    
+
     /**
      * Returns the Key URI
      *
@@ -42,31 +42,31 @@ class GoogleAuthenticator
         if (!in_array($type, self::$allowedTypes)) {
             throw new \InvalidArgumentException('Type has to be of allowed types list');
         }
-        
+
         // Label can't be empty
         $label = trim($label);
-        
+
         if (strlen($label) < 1) {
             throw new \InvalidArgumentException('Label has to be one or more printable characters');
         }
-        
+
         // Secret needs to be here
         if (strlen($secret) < 1) {
             throw new \InvalidArgumentException('No secret present');
         }
-        
+
         // check for counter on hotp
         if ($type == 'hotp' && is_null($counter)) {
             throw new \InvalidArgumentException('Counter required for hotp');
         }
-        
+
         // This is the base, these are at least required
         $otpauth = 'otpauth://' . $type . '/' . $label . '?secret=' . $secret;
-        
+
         if ($type == 'hotp' && !is_null($counter)) {
             $otpauth .= '&counter=' . $counter;
         }
-        
+
         // Now check the options array
 
         // algorithm (currently ignored by Authenticator)
@@ -74,13 +74,13 @@ class GoogleAuthenticator
         if (array_key_exists('algorithm', $options)) {
             $otpauth .= '&algorithm=' . $options['algorithm'];
         }
-        
+
         // digits (currently ignored by Authenticator)
         // Defaults to 6
         if (array_key_exists('digits', $options)) {
             $otpauth .= '&digits=' . $options['digits'];
         }
-        
+
         // period, only for totp (currently ignored by Authenticator)
         // Defaults to 30
         if ($type == 'totp' && array_key_exists('period', $options)) {
@@ -96,7 +96,7 @@ class GoogleAuthenticator
         return $otpauth;
     }
 
-    
+
     /**
      * Returns the QR code url
      *
@@ -116,13 +116,13 @@ class GoogleAuthenticator
     {
         // Width and height can be overwritten
         $width = self::$width;
-        
+
         if (array_key_exists('width', $options) && is_numeric($options['width'])) {
             $width = $options['width'];
         }
-        
+
         $height = self::$height;
-        
+
         if (array_key_exists('height', $options) && is_numeric($options['height'])) {
             $height = $options['height'];
         }
@@ -131,7 +131,7 @@ class GoogleAuthenticator
 
         $url = 'https://chart.googleapis.com/chart?chs=' . $width . 'x'
              . $height . '&cht=qr&chld=M|0&chl=' . urlencode($otpauth);
-        
+
         return $url;
     }
 
@@ -147,13 +147,29 @@ class GoogleAuthenticator
     public static function generateRandom($length = 16)
     {
         $keys = array_merge(range('A','Z'), range(2,7)); // No padding char
-    
+
         $string = '';
-    
+
         for ($i = 0; $i < $length; $i++) {
-            $string .= $keys[rand(0,31)];
+            $string .= $keys[self::getRand()];
         }
-    
+
         return $string;
+    }
+
+    private static function getRand()
+    {
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $bytes = openssl_random_pseudo_bytes(2);
+            $number = hexdec(bin2hex($bytes));
+
+            if ($number > 31) {
+                $number = $number % 32;
+            }
+
+            return $number;
+        } else {
+            return mt_rand(0, 31);
+        }
     }
 }
