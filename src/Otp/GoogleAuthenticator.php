@@ -50,8 +50,7 @@ class GoogleAuthenticator
             throw new \InvalidArgumentException('Label has to be one or more printable characters');
         }
 
-        $parts = explode(':', $label);
-        if (count($parts) > 2) {
+        if (substr_count($label, ':') > 2) {
         	throw new \InvalidArgumentException('Account name contains illegal colon characters');
         }
 
@@ -69,7 +68,7 @@ class GoogleAuthenticator
         $otpauth = 'otpauth://' . $type . '/' . str_replace(array(':', ' '), array('%3A', '%20'), $label) . '?secret=' . rawurlencode($secret);
 
         if ($type == 'hotp' && !is_null($counter)) {
-            $otpauth .= '&counter=' . rawurlencode($counter);
+            $otpauth .= '&counter=' . intval($counter);
         }
 
         // Now check the options array
@@ -82,8 +81,10 @@ class GoogleAuthenticator
 
         // digits (currently ignored by Authenticator)
         // Defaults to 6
-        if (array_key_exists('digits', $options)) {
-            $otpauth .= '&digits=' . rawurlencode($options['digits']);
+        if (array_key_exists('digits', $options) && intval($options['digits']) !== 6 && intval($options['digits']) !== 8) {
+        	throw new \InvalidArgumentException('Digits can only have the values 6 or 8, ' . $options['digits'] . ' given');
+        } elseif (array_key_exists('digits', $options)) {
+            $otpauth .= '&digits=' . intval($options['digits']);
         }
 
         // period, only for totp (currently ignored by Authenticator)
