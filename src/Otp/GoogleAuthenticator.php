@@ -50,6 +50,10 @@ class GoogleAuthenticator
             throw new \InvalidArgumentException('Label has to be one or more printable characters');
         }
 
+        if (substr_count($label, ':') > 2) {
+        	throw new \InvalidArgumentException('Account name contains illegal colon characters');
+        }
+
         // Secret needs to be here
         if (strlen($secret) < 1) {
             throw new \InvalidArgumentException('No secret present');
@@ -61,10 +65,10 @@ class GoogleAuthenticator
         }
 
         // This is the base, these are at least required
-        $otpauth = 'otpauth://' . $type . '/' . $label . '?secret=' . $secret;
+        $otpauth = 'otpauth://' . $type . '/' . str_replace(array(':', ' '), array('%3A', '%20'), $label) . '?secret=' . rawurlencode($secret);
 
         if ($type == 'hotp' && !is_null($counter)) {
-            $otpauth .= '&counter=' . $counter;
+            $otpauth .= '&counter=' . intval($counter);
         }
 
         // Now check the options array
@@ -72,25 +76,27 @@ class GoogleAuthenticator
         // algorithm (currently ignored by Authenticator)
         // Defaults to SHA1
         if (array_key_exists('algorithm', $options)) {
-            $otpauth .= '&algorithm=' . $options['algorithm'];
+            $otpauth .= '&algorithm=' . rawurlencode($options['algorithm']);
         }
 
         // digits (currently ignored by Authenticator)
         // Defaults to 6
-        if (array_key_exists('digits', $options)) {
-            $otpauth .= '&digits=' . $options['digits'];
+        if (array_key_exists('digits', $options) && intval($options['digits']) !== 6 && intval($options['digits']) !== 8) {
+        	throw new \InvalidArgumentException('Digits can only have the values 6 or 8, ' . $options['digits'] . ' given');
+        } elseif (array_key_exists('digits', $options)) {
+            $otpauth .= '&digits=' . intval($options['digits']);
         }
 
         // period, only for totp (currently ignored by Authenticator)
         // Defaults to 30
         if ($type == 'totp' && array_key_exists('period', $options)) {
-            $otpauth .= '&period=' . $options['period'];
+            $otpauth .= '&period=' . rawurlencode($options['period']);
         }
 
         // issuer
         // Defaults to none
         if (array_key_exists('issuer', $options)) {
-            $otpauth .= '&issuer=' . $options['issuer'];
+            $otpauth .= '&issuer=' . rawurlencode($options['issuer']);
         }
 
         return $otpauth;

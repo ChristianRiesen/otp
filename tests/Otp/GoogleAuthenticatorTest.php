@@ -48,11 +48,29 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 			'otpauth://totp/user@host.com?secret=MEP3EYVA6XNFNVNM',
 			GoogleAuthenticator::getKeyUri('totp', 'user@host.com', $secret)
 		);
-		
+
 		// hotp (include a counter)
 		$this->assertEquals(
 			'otpauth://hotp/user@host.com?secret=MEP3EYVA6XNFNVNM&counter=1234',
 			GoogleAuthenticator::getKeyUri('hotp', 'user@host.com', $secret, 1234)
+		);
+
+		// totp/hotp with an issuer in the label
+		$this->assertEquals(
+			'otpauth://hotp/issuer%3Auser@host.com?secret=MEP3EYVA6XNFNVNM&counter=1234',
+			GoogleAuthenticator::getKeyUri('hotp', 'issuer:user@host.com', $secret, 1234)
+		);
+
+		// totp/hotp with an issuer and spaces in the label
+		$this->assertEquals(
+			'otpauth://hotp/an%20issuer%3A%20user@host.com?secret=MEP3EYVA6XNFNVNM&counter=1234',
+			GoogleAuthenticator::getKeyUri('hotp', 'an issuer: user@host.com', $secret, 1234)
+		);
+
+		// totp/hotp with an issuer as option
+		$this->assertEquals(
+			'otpauth://hotp/an%20issuer%3Auser@host.com?secret=MEP3EYVA6XNFNVNM&counter=1234&issuer=an%20issuer',
+			GoogleAuthenticator::getKeyUri('hotp', 'an issuer:user@host.com', $secret, 1234, array('issuer' => 'an issuer'))
 		);
 	}
 	
