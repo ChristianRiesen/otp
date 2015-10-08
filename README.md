@@ -77,6 +77,8 @@ Static function class to generate a correct url for the QR code, so you can easy
 
 There are also older open source versions of the Google Authenticator app for both [iPhone](https://github.com/google/google-authenticator) and [Android](https://github.com/google/google-authenticator-android)
 
+This helper class uses the random_int function from PHP7, or the polyfill method from [paragonie/random_compat](https://packagist.org/packages/paragonie/random_compat) if present and falls back on other (less "secure") random generators.
+
 About
 =====
 

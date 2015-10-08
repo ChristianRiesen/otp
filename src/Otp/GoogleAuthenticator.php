@@ -163,9 +163,17 @@ class GoogleAuthenticator
         return $string;
     }
 
+    /**
+     * Get random number
+     *
+     * @return int Random number between 0 and 31 (including)
+     */
     private static function getRand()
     {
-        if (function_exists('openssl_random_pseudo_bytes')) {
+        if (function_exists('random_int')) {
+            // Uses either the PHP7 internal function or the polyfill if present
+            return random_int(0, 31);
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $bytes = openssl_random_pseudo_bytes(2);
             $number = hexdec(bin2hex($bytes));
 

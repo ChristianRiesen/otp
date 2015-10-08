@@ -5,7 +5,7 @@
     "keywords": ["otp","hotp","totp","googleauthenticator","rfc4226","rfc6238"],
     "homepage": "https://github.com/ChristianRiesen/otp",
     "license": "MIT",
-	"authors": [
+    "authors": [
         {
             "name": "Christian Riesen",
             "email": "chris.riesen@gmail.com",
@@ -15,12 +15,14 @@
     ],
     "require": {
         "php": ">=5.3.0",
-		"christian-riesen/base32": ">=1.0"
+        "christian-riesen/base32": ">=1.0"
     },
-	"autoload": {
+    "suggest": {
+        "paragonie/random_compat": "Optional polyfill for a more secure random generator for pre PHP7 versions"
+    },
+    "autoload": {
         "psr-0": {
             "Otp": "src"
         }
     }
 }
-
