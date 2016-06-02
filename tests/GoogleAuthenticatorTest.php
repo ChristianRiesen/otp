@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../src/Otp/GoogleAuthenticator.php';
+namespace Otp\Tests;
 
 use Otp\GoogleAuthenticator;
 
@@ -84,5 +84,28 @@ class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
 	
 	    // Can be told to make a longer secret
 	    $this->assertRegExp('/[2-7A-Z]{18}/', GoogleAuthenticator::generateRandom(18));
+	}
+
+	/**
+	 * Test generateRecoveryCodes
+	 */
+	public function testGenerateRecoveryCodes()
+	{
+		// Default settings
+		$codes = GoogleAuthenticator::generateRecoveryCodes();
+
+		$this->assertCount(1, $codes);
+		$this->assertRegExp('/[0-9]{9}/', $codes[0]);
+
+		// More codes, longer
+		$codes = GoogleAuthenticator::generateRecoveryCodes(4, 20);
+		$this->assertCount(4, $codes);
+		$this->assertRegExp('/[0-9]{9}/', $codes[0]);
+		$this->assertRegExp('/[0-9]{9}/', $codes[1]);
+		$this->assertRegExp('/[0-9]{9}/', $codes[2]);
+		$this->assertRegExp('/[0-9]{9}/', $codes[3]);
+
+		// To check for uniqueness
+		$this->assertSame($codes, array_unique($codes));
 	}
 }

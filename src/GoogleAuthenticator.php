@@ -1,10 +1,9 @@
 <?php
+
 namespace Otp;
 
 /**
  * Google Authenticator
- *
- * Last update: 2014-08-19
  *
  * Can be easy used with Google Authenticator
  * @link https://code.google.com/p/google-authenticator/
@@ -102,7 +101,6 @@ class GoogleAuthenticator
         return $otpauth;
     }
 
-
     /**
      * Returns the QR code url
      *
@@ -148,6 +146,7 @@ class GoogleAuthenticator
      * where code that might need base32 usually also needs something like this.
      *
      * @param integer $length Exact length of output string
+     *
      * @return string Base32 encoded random
      */
     public static function generateRandom($length = 16)
@@ -164,26 +163,60 @@ class GoogleAuthenticator
     }
 
     /**
+     * Create recovery codes
+     *
+     * A pure helper function to make your life easier. Generates a list of codes, guaranteed to be unique in the set
+     *
+     * @param integer $count How many codes to return
+     * @param integer $length How long each code should be
+     *
+     * @return array Array of codes
+     */
+    public static function generateRecoveryCodes($count = 1, $length = 9)
+    {
+        $count = intval($count);
+        $length = intval($length);
+        $codes = [];
+
+        do {
+            // Generate codes
+            $code = '';
+            for ($i = 1; $i <= $length; $i++) {
+                $code .= self::getRand(9);
+            }
+
+            // To make sure no duplicates get in
+            if (!in_array($code, $codes)) {
+                $codes[] = $code;
+            }
+        } while (count($codes) < $count);
+
+        return $codes;
+    }
+
+    /**
      * Get random number
      *
-     * @return int Random number between 0 and 31 (including)
+     * @return integer Random number between 0 and 31 (including)
      */
-    private static function getRand()
+    private static function getRand($max = 31)
     {
         if (function_exists('random_int')) {
             // Uses either the PHP7 internal function or the polyfill if present
-            return random_int(0, 31);
+            return random_int(0, $max);
         } elseif (function_exists('openssl_random_pseudo_bytes')) {
+            // For those not wanting either PHP7 or the polyfill, this works well enough
             $bytes = openssl_random_pseudo_bytes(2);
             $number = hexdec(bin2hex($bytes));
 
-            if ($number > 31) {
-                $number = $number % 32;
+            if ($number > $max) {
+                $number = $number % ($max + 1);
             }
 
             return $number;
         } else {
-            return mt_rand(0, 31);
+            // And last case, this does the trick too
+            return mt_rand(0, $max);
         }
     }
 }

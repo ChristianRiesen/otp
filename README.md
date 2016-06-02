@@ -14,7 +14,7 @@ Use [composer](http://getcomposer.org/) and require the library in your `compose
 
 	{
     	"require": {
-        	"christian-riesen/otp": "1.*",
+        	"christian-riesen/otp": "^2.0",
     	}
 	}
 
@@ -27,7 +27,7 @@ Usage
 use Otp\Otp;
 use Otp\GoogleAuthenticator;
 
-// Seperate class, see https://github.com/ChristianRiesen/base32
+// Seperate class, see https://github.com/ChristianRiesen/base32, requirement for this one
 use Base32\Base32;
 
 // Get a Pseudo Secret

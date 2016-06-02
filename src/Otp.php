@@ -1,10 +1,9 @@
 <?php
+
 namespace Otp;
 
 /**
  * One Time Passwords
- *
- * Last update: 2012-06-16
  *
  * Implements HOTP and TOTP
  *
@@ -240,7 +239,7 @@ class Otp implements OtpInterface
      * @param integer $counter Counter in integer form
      * @return string Binary string
      */
-    protected function getBinaryCounter($counter)
+    private function getBinaryCounter($counter)
     {
         return pack('N*', 0) . pack('N*', $counter);
     }
@@ -252,7 +251,7 @@ class Otp implements OtpInterface
      *
      * @return integer Time counter
      */
-    protected function getTimecounter()
+    private function getTimecounter()
     {
         return floor(time() / $this->period);
     }
@@ -266,7 +265,7 @@ class Otp implements OtpInterface
      * @param string $hash hmac hash
      * @return number
      */
-    protected function truncate($hash)
+    private function truncate($hash)
     {
         $offset = ord($hash[19]) & 0xf;
         
@@ -290,7 +289,7 @@ class Otp implements OtpInterface
      * @param mixed $b
      * @return boolean
      */
-    protected function safeCompare($a, $b)
+    private function safeCompare($a, $b)
     {
         $sha1a = sha1($a);
         $sha1b = sha1($b);

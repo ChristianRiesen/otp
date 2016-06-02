@@ -1,10 +1,9 @@
 <?php
+
 namespace Otp;
 
 /**
  * Interface for HOTP and TOTP
- *
- * Last update: 2012-06-16
  *
  * HMAC-Based One-time Password(HOTP) algorithm specified in RFC 4226
  * @link https://tools.ietf.org/html/rfc4226
@@ -20,46 +19,47 @@ namespace Otp;
 interface OtpInterface
 {
     /**
-     * Returns OTP using the HOTP algorithm
+     * Returns OTP using the HOTP algorithm (counter based)
      *
-     * @param string $secret
-     * @param integer $counter
+     * @param string  $secret  Base32 Secret String
+     * @param integer $counter Counter
+     *
      * @return string One Time Password
      */
     function hotp($secret, $counter);
-    
+
     /**
-     * Returns OTP using the TOTP algorithm
+     * Returns OTP using the TOTP algorithm (time based)
      *
-     * @param string $secret
+     * @param string  $secret      Base32 Secret String
      * @param integer $timecounter Optional: Uses current time if null
+     *
      * @return string One Time Password
      */
     function totp($secret, $timecounter = null);
-    
+
     /**
      * Checks Hotp against a key
      *
      * This is a helper function, but is here to ensure the Totp can be checked
      * in the same manner.
      *
-     * @param string $secret
-     * @param integer $counter
-     * @param string $key
+     * @param string  $secret  Base32 Secret String
+     * @param integer $counter Counter
+     * @param string  $key     User supplied key
      *
-     * @return boolean If key is correct
+     * @return boolean True if key is correct
      */
     function checkHotp($secret, $counter, $key);
-    
+
     /**
      * Checks Totp agains a key
      *
+     * @param string  $secret    Base32 Secret String
+     * @param integer $key       User supplied key
+     * @param integer $timedrift How large a drift to use beyond exact match
      *
-     * @param string $secret
-     * @param integer $key
-     * @param integer $timedrift
-     *
-     * @return boolean If key is correct
+     * @return boolean True if key is correct within time drift
      */
     function checkTotp($secret, $key, $timedrift = 1);
 }
