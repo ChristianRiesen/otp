@@ -91,9 +91,20 @@ class Otp implements OtpInterface
     /* (non-PHPdoc)
      * @see Otp.OtpInterface::checkHotp()
     */
-    public function checkHotp($secret, $counter, $key)
+    public function checkHotp($secret, $counter, $key, $counterwindow = 5)
     {
-        return $this->safeCompare($this->hotp($secret, $counter), $key);
+        if(!is_numeric($counterwindow) || $counterwindow < 0){
+          throw new \InvalidArgumentException('Invalid counterwindow supplied');
+        }
+
+        for($c = 0; $c <= $counterwindow; $c = $c + 1) {
+
+          if($this->safeCompare($this->hotp($secret, $counter + $c), $key)){
+              return $counter + $c;
+          }
+        }
+
+        return false;
     }
     
     /* (non-PHPdoc)

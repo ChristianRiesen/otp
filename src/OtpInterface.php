@@ -47,10 +47,11 @@ interface OtpInterface
      * @param string  $secret  Base32 Secret String
      * @param integer $counter Counter
      * @param string  $key     User supplied key
+     * @param integer $counterwindow Size of the look-ahead window
      *
-     * @return boolean True if key is correct
+     * @return int|boolean the counter if key is correct else false
      */
-    function checkHotp($secret, $counter, $key);
+    function checkHotp($secret, $counter, $key, $counterwindow);
 
     /**
      * Checks Totp agains a key
