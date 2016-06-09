@@ -48,7 +48,7 @@ interface OtpInterface
      * @param integer $counter Counter
      * @param string  $key     User supplied key
      *
-     * @return boolean the counter if key is correct else false
+     * @return boolean True if key is correct
      */
     function checkHotp($secret, $counter, $key);
 
