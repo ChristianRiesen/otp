@@ -120,4 +120,45 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 		$this->Otp->hotp($this->secret, 'a');
 	}
 
+	/**
+	 * Tests Otp->checkHotpResync()
+	 */
+	public function testHotpResync()
+	{
+		$secret = $this->secret;
+
+		// test default counter window
+		$this->assertEquals(0, $this->Otp->checkHotpResync($secret, 0, '755224'));
+		$this->assertEquals(1, $this->Otp->checkHotpResync($secret, 0, '287082'));
+		$this->assertEquals(2, $this->Otp->checkHotpResync($secret, 0, '359152'));
+
+		// test provided counter window
+		$this->assertEquals(3, $this->Otp->checkHotpResync($secret, 0, '969429', 3));
+		$this->assertEquals(4, $this->Otp->checkHotpResync($secret, 0, '338314', 4));
+		$this->assertEquals(5, $this->Otp->checkHotpResync($secret, 0, '254676', 5));
+
+		// test failures
+		$this->assertFalse($this->Otp->checkHotpResync($secret, 7, '287922'));
+		$this->assertFalse($this->Otp->checkHotpResync($secret, 8, '162583'));
+		$this->assertFalse($this->Otp->checkHotpResync($secret, 9, '399871'));
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Counter must be integer
+	 */
+	public function testHotpResyncInvalidCounter()
+	{
+		$this->Otp->checkHotpResync($this->secret, 'a', '755224');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Invalid counterwindow supplied
+	 */
+	public function testHotpResyncInvalidCounterWindow()
+	{
+		$this->Otp->checkHotpResync($this->secret, 0, '755224', 'a');
+	}
+
 }
