@@ -37,27 +37,85 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 		
 		parent::tearDown();
 	}
+
+	/**
+	 * Invalid counter values for tests
+	 */
+	public function hotpTestValues()
+	{
+		return [
+				 ['755224', 0], ['287082', 1], ['359152', 2],
+				 ['969429', 3], ['338314', 4], ['254676', 5],
+   				 ['287922', 6], ['162583', 7], ['399871', 8],
+   				 ['520489', 9]
+			   ];
+	}
+
+	/**
+	 * Invalid counter values for tests
+	 */
+	public function totpTestValues()
+	{
+		return [
+				 ['94287082', 59], ['07081804', 1111111109], ['14050471', 1111111111],
+				 ['89005924', 1234567890], ['69279037', 2000000000], ['65353130', 20000000000],
+			   ];
+	}
+
+	/**
+	 * Invalid counter values for tests
+	 */
+	public function invalidCounterValues()
+	{
+		return [
+				 ['a'], [-1]
+			   ];
+	}
+
+	/**
+	 * Invalid counter values for tests
+	 */
+	public function hotpResyncDefaultTestValues()
+	{
+		return [
+				 ['755224', 0], ['287082', 1], ['359152', 2]
+			   ];
+	}
+
+	/**
+	 * Invalid counter values for tests
+	 */
+	public function hotpResyncWindowTestValues()
+	{
+		return [
+				 ['969429', 0, 3], ['338314', 0, 4],
+				 ['287922', 3, 3], ['162583', 3, 4]
+			   ];
+	}
+
+	/**
+	 * Invalid counter values for tests
+	 */
+	public function hotpResyncFailureTestValues()
+	{
+		return [
+				 ['287922', 7], ['162583', 8], ['399871', 9]
+			   ];
+	}
 	
 	/**
 	 * Tests Otp->hotp()
 	 *
 	 * Using test vectors from RFC
 	 * https://tools.ietf.org/html/rfc4226
+	 *
+	 * @dataProvider hotpTestValues
 	 */
-	public function testHotpRfc()
+	public function testHotpRfc($key, $counter)
 	{
 		$secret = $this->secret;
 	
-		$this->assertEquals('755224', $this->Otp->hotp($secret, 0));
-		$this->assertEquals('287082', $this->Otp->hotp($secret, 1));
-		$this->assertEquals('359152', $this->Otp->hotp($secret, 2));
-		$this->assertEquals('969429', $this->Otp->hotp($secret, 3));
-		$this->assertEquals('338314', $this->Otp->hotp($secret, 4));
-		$this->assertEquals('254676', $this->Otp->hotp($secret, 5));
-		$this->assertEquals('287922', $this->Otp->hotp($secret, 6));
-		$this->assertEquals('162583', $this->Otp->hotp($secret, 7));
-		$this->assertEquals('399871', $this->Otp->hotp($secret, 8));
-		$this->assertEquals('520489', $this->Otp->hotp($secret, 9));
+		$this->assertEquals($key, $this->Otp->hotp($secret, $counter));
 	}
 		
 	/**
@@ -67,8 +125,10 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 	 * its own tests
 	 * Using test vectors from RFC
 	 * https://tools.ietf.org/html/rfc6238
+	 *
+	 * @dataProvider totpTestValues
 	 */
-	public function testTotpRfc()
+	public function testTotpRfc($key, $time)
 	{
 		$secret = $this->secret;
 		
@@ -79,12 +139,8 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 		// to count as the key
 
 		// SHA 1 grouping
-		$this->assertEquals('94287082', $this->Otp->hotp($secret,          floor(59/30)), 'sha1 with time 59');
-		$this->assertEquals('07081804', $this->Otp->hotp($secret,  floor(1111111109/30)), 'sha1 with time 1111111109');
-		$this->assertEquals('14050471', $this->Otp->hotp($secret,  floor(1111111111/30)), 'sha1 with time 1111111111');
-		$this->assertEquals('89005924', $this->Otp->hotp($secret,  floor(1234567890/30)), 'sha1 with time 1234567890');
-		$this->assertEquals('69279037', $this->Otp->hotp($secret,  floor(2000000000/30)), 'sha1 with time 2000000000');
-		$this->assertEquals('65353130', $this->Otp->hotp($secret, floor(20000000000/30)), 'sha1 with time 20000000000');
+		$this->assertEquals($key, $this->Otp->hotp($secret, floor($time/30)), "sha 1 with $time");
+
 		
 		/*
 		The following tests do NOT pass.
@@ -110,14 +166,75 @@ class OtpTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('47863826', $this->Otp->hotp($secret, floor(20000000000/30)), 'sha512 with time 20000000000');
 		*/
 	}
-	
+
 	/**
+	 * @dataProvider invalidCounterValues
 	 * @expectedException InvalidArgumentException
-	 * @expectedExceptionMessage Counter must be integer
+	 * @expectedExceptionMessage Invalid counter supplied
 	 */
-	public function testHotpInvalidCounter()
+	public function testHotpInvalidCounter($counter)
 	{
-		$this->Otp->hotp($this->secret, 'a');
+		$this->Otp->hotp($this->secret, $counter);
+	}
+
+	/**
+	 * Tests Otp->checkHotpResync() with default counter window
+	 *
+	 * @dataProvider hotpResyncDefaultTestValues
+	 */
+	public function testHotpResyncDefault($key, $counter)
+	{
+		$secret = $this->secret;
+
+		// test with default counter window
+		$this->assertSame($counter, $this->Otp->checkHotpResync($secret, $counter, $key));
+	}
+
+
+	/**
+	 * Tests Otp->checkHotpResync() with a provided counter window
+	 *
+	 * @dataProvider hotpResyncWindowTestValues
+	 */
+	public function testHotpResyncWindow($key, $counter, $counterwindow)
+	{
+		$secret = $this->secret;
+
+		// test with provided counter window
+		$this->assertSame(($counter + $counterwindow), $this->Otp->checkHotpResync($secret, $counter, $key, $counterwindow));
+	}
+
+	/**
+	 * Tests Otp->checkHotpResync() with mismatching key and counter
+	 *
+	 * @dataProvider hotpResyncFailureTestValues
+	 */
+	public function testHotpResyncFailures($key, $counter)
+	{
+		$secret = $this->secret;
+
+		// test failures
+		$this->assertFalse($this->Otp->checkHotpResync($secret, $counter, $key));
+	}
+
+	/**
+	 * @dataProvider invalidCounterValues
+	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Invalid counter supplied
+	 */
+	public function testHotpResyncInvalidCounter($counter)
+	{
+		$this->Otp->checkHotpResync($this->secret, $counter, '755224');
+	}
+
+	/**
+	 * @dataProvider invalidCounterValues
+	 * @expectedException InvalidArgumentException
+	 * @expectedExceptionMessage Invalid counterwindow supplied
+	 */
+	public function testHotpResyncInvalidCounterWindow($counterwindow)
+	{
+		$this->Otp->checkHotpResync($this->secret, 0, '755224', $counterwindow);
 	}
 
 }

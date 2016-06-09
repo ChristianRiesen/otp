@@ -62,8 +62,8 @@ class Otp implements OtpInterface
     */
     public function hotp($secret, $counter)
     {
-        if (!is_numeric($counter)) {
-            throw new \InvalidArgumentException('Counter must be integer');
+        if (!is_numeric($counter) || $counter < 0) {
+            throw new \InvalidArgumentException('Invalid counter supplied');
         }
         
         $hash = hash_hmac(
@@ -94,6 +94,28 @@ class Otp implements OtpInterface
     public function checkHotp($secret, $counter, $key)
     {
         return $this->safeCompare($this->hotp($secret, $counter), $key);
+    }
+
+
+    /* (non-PHPdoc)
+     * @see Otp.OtpInterface::checkHotpResync()
+    */
+    public function checkHotpResync($secret, $counter, $key, $counterwindow = 2)
+    {
+        if (!is_numeric($counter) || $counter < 0) {
+            throw new \InvalidArgumentException('Invalid counter supplied');
+        }
+
+        if(!is_numeric($counterwindow) || $counterwindow < 0){
+            throw new \InvalidArgumentException('Invalid counterwindow supplied');
+        }
+
+        for($c = 0; $c <= $counterwindow; $c = $c + 1) {
+            if($this->safeCompare($this->hotp($secret, $counter + $c), $key)){
+                return $counter + $c;
+            }
+        }
+        return false;
     }
     
     /* (non-PHPdoc)
