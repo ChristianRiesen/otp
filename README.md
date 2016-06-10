@@ -85,7 +85,7 @@ About
 Requirements
 ------------
 
-PHP 5.3.x+
+PHP 5.4.x+
 
 Uses [Base32 class](https://github.com/ChristianRiesen/base32).
 
