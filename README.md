@@ -59,7 +59,7 @@ if ($otp->checkTotp(Base32::decode($secret), $key)) {
 }
 
 // Just to create a key for display (testing)
-$key = $otp->totp($secret);
+$key = $otp->totp(Base32::decode($secret));
 
 ```
 
