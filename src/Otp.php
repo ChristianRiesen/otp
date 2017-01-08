@@ -56,6 +56,13 @@ class Otp implements OtpInterface
      * @var string
      */
     protected $algorithm = 'sha1';
+
+    /**
+     * Time offset between system time and GMT in seconds
+     *
+     * @var integer
+     */
+    protected $totpOffset = 0;
     
     /* (non-PHPdoc)
      * @see Otp.OtpInterface::hotp()
@@ -252,6 +259,34 @@ class Otp implements OtpInterface
     {
         return $this->digits;
     }
+
+    /**
+     * Set offset between system time and GMT
+     *
+     * @param integer $offset GMT - time()
+     * @throws \InvalidArgumentException
+     * @return \Otp\Otp
+     */
+    public function setTotpOffset($offset)
+    {
+        if (!is_int($offset)) {
+            throw new \InvalidArgumentException('Offset must be an integer');
+        }
+        
+        $this->totpOffset = $offset;
+        
+        return $this;
+    }
+    
+    /**
+     * Returns offset between system time and GMT in seconds
+     *
+     * @return integer
+     */
+    public function getTotpOffset()
+    {
+        return $this->totpOffset;
+    }
     
     /**
      * Generates a binary counter for hashing
@@ -275,7 +310,7 @@ class Otp implements OtpInterface
      */
     private function getTimecounter()
     {
-        return floor(time() / $this->period);
+        return floor((time() + $this->totpOffset) / $this->period);
     }
     
     /**
