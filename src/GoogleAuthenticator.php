@@ -161,7 +161,7 @@ class GoogleAuthenticator
         $string = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $string .= $keys[self::getRand()];
+            $string .= $keys[random_int(0, 31)];
         }
 
         return $string;
@@ -187,7 +187,7 @@ class GoogleAuthenticator
             // Generate codes
             $code = '';
             for ($i = 1; $i <= $length; $i++) {
-                $code .= self::getRand(9);
+                $code .= random_int(0, 9);
             }
 
             // To make sure no duplicates get in
@@ -197,31 +197,5 @@ class GoogleAuthenticator
         } while (count($codes) < $count);
 
         return $codes;
-    }
-
-    /**
-     * Get random number
-     *
-     * @return integer Random number between 0 and 31 (including)
-     */
-    private static function getRand($max = 31)
-    {
-        if (function_exists('random_int')) {
-            // Uses either the PHP7 internal function or the polyfill if present
-            return random_int(0, $max);
-        } elseif (function_exists('openssl_random_pseudo_bytes')) {
-            // For those not wanting either PHP7 or the polyfill, this works well enough
-            $bytes = openssl_random_pseudo_bytes(2);
-            $number = hexdec(bin2hex($bytes));
-
-            if ($number > $max) {
-                $number = $number % ($max + 1);
-            }
-
-            return $number;
-        } else {
-            // And last case, this does the trick too
-            return mt_rand(0, $max);
-        }
     }
 }
