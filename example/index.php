@@ -6,7 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Otp\Otp;
 use Otp\GoogleAuthenticator;
-use Base32\Base32;
+use ParagonIE\ConstantTime\Encoding;
 
 // Getting a secret, either by generating or from storage
 // DON'T use sessions as storage for this in production!!!
@@ -25,7 +25,7 @@ if (strlen($secret) != 16) {
 // To use it in totp though we need to decode it into the original
 $otp = new Otp();
 
-$currentTotp = $otp->totp(Base32::decode($secret));
+$currentTotp = $otp->totp(Encoding::base32DecodeUpper($secret));
 
 $qrCode = GoogleAuthenticator::getQrCodeUrl('totp', 'otpsample@cr', $secret);
 $keyUri = GoogleAuthenticator::getKeyUri('totp', 'otpsample@cr', $secret);
@@ -79,7 +79,7 @@ if (isset($_POST['otpkey'])) {
 	if (strlen($key) == 6) {
 		// Remember that the secret is a base32 string that needs decoding
 		// to use it here!
-		if ($otp->checkTotp(Base32::decode($secret), $key)) {
+		if ($otp->checkTotp(Encoding::base32DecodeUpper($secret), $key)) {
 			echo 'Key correct!';
 			// Add here something that makes note of this key and will not allow
 			// the use of it, for this user for the next 2 minutes. This way you

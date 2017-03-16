@@ -2,6 +2,8 @@
 
 namespace Otp;
 
+use ParagonIE\ConstantTime\Encoding;
+
 /**
  * Google Authenticator
  *

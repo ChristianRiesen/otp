@@ -26,9 +26,7 @@ Usage
 
 use Otp\Otp;
 use Otp\GoogleAuthenticator;
-
-// Seperate class, see https://github.com/ChristianRiesen/base32, requirement for this one
-use Base32\Base32;
+use ParagonIE\ConstantTime\Encoding;
 
 // Get a Pseudo Secret
 // Defaults to 16 characters
@@ -48,7 +46,7 @@ $otp = new Otp();
 // Assuming this is present and sanitized
 // Allows for a 1 code time drift by default
 // Third parameter can alter that behavior
-if ($otp->checkTotp(Base32::decode($secret), $key)) {
+if ($otp->checkTotp(Encoding::base32Decode($secret), $key)) {
     // Correct key
     // IMPORTANT! Note this key as being used
     // so nobody could launch a replay attack.
@@ -59,7 +57,7 @@ if ($otp->checkTotp(Base32::decode($secret), $key)) {
 }
 
 // Just to create a key for display (testing)
-$key = $otp->totp(Base32::decode($secret));
+$key = $otp->totp(Encoding::base32Decode($secret));
 
 ```
 
@@ -77,7 +75,7 @@ Static function class to generate a correct url for the QR code, so you can easy
 
 There are also older open source versions of the Google Authenticator app for both [iPhone](https://github.com/google/google-authenticator) and [Android](https://github.com/google/google-authenticator-android)
 
-This helper class uses the random_int function from PHP7, or the polyfill method from [paragonie/random_compat](https://packagist.org/packages/paragonie/random_compat) if present and falls back on other (less "secure") random generators.
+This helper class uses the random_int function from PHP7, or the polyfill method from [paragonie/random_compat](https://packagist.org/packages/paragonie/random_compat) if present.
 
 About
 =====
@@ -87,7 +85,7 @@ Requirements
 
 PHP 5.4.x+
 
-Uses [Base32 class](https://github.com/ChristianRiesen/base32).
+Uses [paragonie/random_compat](https://github.com/paragonie/random_compat) and [paragonie/constant_time_encoding](https://github.com/paragonie/constant_time_encoding).
 
 If you want to run the tests, PHPUnit 3.6 or up is required.
 
