@@ -100,7 +100,7 @@ class Otp implements OtpInterface
     */
     public function checkHotp($secret, $counter, $key)
     {
-        return $this->safeCompare($this->hotp($secret, $counter), $key);
+        return hash_equals($this->hotp($secret, $counter), $key);
     }
 
 
@@ -118,7 +118,7 @@ class Otp implements OtpInterface
         }
 
         for($c = 0; $c <= $counterwindow; $c = $c + 1) {
-            if($this->safeCompare($this->hotp($secret, $counter + $c), $key)){
+            if(hash_equals($this->hotp($secret, $counter + $c), $key)){
                 return $counter + $c;
             }
         }
@@ -142,7 +142,7 @@ class Otp implements OtpInterface
         $end = $timecounter + ($timedrift);
     
         // We first try the current, as it is the most likely to work
-        if ($this->safeCompare($this->totp($secret, $timecounter), $key)) {
+        if (hash_equals($this->totp($secret, $timecounter), $key)) {
             return true;
         } elseif ($timedrift == 0) {
             // When timedrift is 0, this is the end of the checks
@@ -156,7 +156,7 @@ class Otp implements OtpInterface
                 continue;
             }
                 
-            if ($this->safeCompare($this->totp($secret, $t), $key)) {
+            if (hash_equals($this->totp($secret, $t), $key)) {
                 return true;
             }
         }
@@ -332,35 +332,6 @@ class Otp implements OtpInterface
             ((ord($hash[$offset+2]) & 0xff) << 8 ) |
             (ord($hash[$offset+3]) & 0xff)
             ) % pow(10, $this->digits);
-    }
-    
-    /**
-     * Safely compares two inputs
-     *
-     * Assumed inputs are numbers and strings.
-     * Compares them in a time linear manner. No matter how much you guess
-     * correct of the partial content, it does not change the time it takes to
-     * run the entire comparison.
-     *
-     * @param mixed $a
-     * @param mixed $b
-     * @return boolean
-     */
-    private function safeCompare($a, $b)
-    {
-        $sha1a = sha1($a);
-        $sha1b = sha1($b);
-        
-        // Now the compare is always the same length. Even considering minute
-        // time differences in sha1 creation, all you know is that a longer
-        // input takes longer to hash, not how long the actual compared value is
-        $result = 0;
-        
-        for ($i = 0; $i < 40; $i++) {
-            $result |= ord($sha1a[$i]) ^ ord($sha1b[$i]);
-        }
-        
-        return $result == 0;
     }
 }
 
