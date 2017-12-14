@@ -3,11 +3,12 @@
 namespace Otp\Tests;
 
 use Otp\GoogleAuthenticator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * GoogleAuthenticator test case.
  */
-class GoogleAuthenticatorTest extends \PHPUnit_Framework_TestCase
+class GoogleAuthenticatorTest extends TestCase
 {
 	/**
 	 * Tests getQrCodeUrl
