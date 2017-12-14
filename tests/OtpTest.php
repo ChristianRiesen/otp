@@ -3,11 +3,12 @@
 namespace Otp\Tests;
 
 use Otp\Otp;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Otp test case.
  */
-class OtpTest extends \PHPUnit_Framework_TestCase
+class OtpTest extends TestCase
 {
 	/**
 	 *
