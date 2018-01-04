@@ -46,7 +46,7 @@ $otp = new Otp();
 // Assuming this is present and sanitized
 // Allows for a 1 code time drift by default
 // Third parameter can alter that behavior
-if ($otp->checkTotp(Encoding::base32Decode($secret), $key)) {
+if ($otp->checkTotp(Encoding::base32DecodeUpper($secret), $key)) {
     // Correct key
     // IMPORTANT! Note this key as being used
     // so nobody could launch a replay attack.
