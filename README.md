@@ -57,7 +57,7 @@ if ($otp->checkTotp(Encoding::base32Decode($secret), $key)) {
 }
 
 // Just to create a key for display (testing)
-$key = $otp->totp(Encoding::base32Decode($secret));
+$key = $otp->totp(Encoding::base32DecodeUpper($secret));
 
 ```
 
