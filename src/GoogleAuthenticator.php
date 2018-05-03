@@ -66,7 +66,7 @@ class GoogleAuthenticator
         }
 
         // This is the base, these are at least required
-        $otpauth = 'otpauth://' . $type . '/' . str_replace(array(':', ' '), array('%3A', '%20'), $label) . '?secret=' . rawurlencode($secret);
+        $otpauth = 'otpauth://' . $type . '/' . rawurlencode($label) . '?secret=' . rawurlencode($secret);
 
         if ($type == 'hotp' && !is_null($counter)) {
             $otpauth .= '&counter=' . intval($counter);
