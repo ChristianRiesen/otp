@@ -13,8 +13,8 @@ namespace Otp;
  * Time-based One-time Password (TOTP) algorithm specified in RFC 6238
  * @link https://tools.ietf.org/html/rfc6238
  *
- * As a note: This code is NOT 2038 proof! The min concern is the function
- * getBinaryCounter that uses the pack function which can't handle 64bit yet.
+ * As a note: This code is only 2038 proof on 64 bit PHP installations with 
+ * PHP >= 5.6.3!
  *
  * Can be easy used with Google Authenticator
  * @link https://code.google.com/p/google-authenticator/
@@ -291,13 +291,19 @@ class Otp implements OtpInterface
     /**
      * Generates a binary counter for hashing
      *
-     * Warning: Not 2038 safe. Maybe until then pack supports 64bit.
+     * Warning: use 64 bit PHP >= 5.6.3 to be "2038 safe".
      *
      * @param integer $counter Counter in integer form
      * @return string Binary string
      */
     private function getBinaryCounter($counter)
     {
+        // on 64 bit, PHP >= 5.6.3 this is "2038 safe"
+        if (8 === PHP_INT_SIZE && PHP_VERSION_ID >= 50603) {
+            return pack('J', $counter);
+        }
+
+        // keep old behavior for 32 bit PHP or PHP < 5.6.3
         return pack('N*', 0) . pack('N*', $counter);
     }
     
