@@ -12,11 +12,11 @@ Installation
 
 Use [composer](http://getcomposer.org/) and require the library in your `composer.json`
 
-	{
-    	"require": {
-        	"christian-riesen/otp": "^2.0",
-    	}
-	}
+    {
+        "require": {
+            "christian-riesen/otp": "^2.0",
+        }
+    }
 
 Usage
 -----
@@ -66,7 +66,7 @@ Sample script in `example` folder. Requires sessions to work (for secret storage
 Class Otp
 ---------
 
-Implements hotp according to [RFC4226](https://tools.ietf.org/html/rfc4226) and totp according to [RFC6238](https://tools.ietf.org/html/rfc6238) (only sha1 algorithm). Once you have a secret, you can use it directly in this class to create the passwords themselves (mainly for debugging use) or use the check functions to safely check the validity of the keys. The `checkTotp` function also includes a helper to battle timedrift.
+Implements hotp according to [RFC4226](https://tools.ietf.org/html/rfc4226) and totp according to [RFC6238](https://tools.ietf.org/html/rfc6238) (only sha1, sha256 and sha512 algorithms). Once you have a secret, you can use it directly in this class to create the passwords themselves (mainly for debugging use) or use the check functions to safely check the validity of the keys. The `checkTotp` function also includes a helper to battle timedrift.
 
 Class GoogleAuthenticator
 -------------------------
@@ -81,11 +81,11 @@ About
 Requirements
 ------------
 
-PHP 5.4.x+
+PHP >= 5.4.0
 
 Uses [paragonie/random_compat](https://github.com/paragonie/random_compat) and [paragonie/constant_time_encoding](https://github.com/paragonie/constant_time_encoding).
 
-If you want to run the tests, PHPUnit 3.6 or up is required.
+If you want to run the tests, PHPUnit >= 4.8.35 is required.
 
 Author
 ------
