@@ -174,14 +174,6 @@ class Otp implements OtpInterface
      * @throws \InvalidArgumentException
      * @return \Otp\Otp
      */
-    
-    /*
-     * This has been disabled since it does not bring the expected results
-     * according to the RFC test vectors for sha256 or sha512.
-     * Until that is fixed, the algorithm simply stays at sha1.
-     * Google Authenticator does not support sha256 and sha512 at the moment.
-     *
-    
     public function setAlgorithm($algorithm)
     {
         if (!in_array($algorithm, $this->allowedAlgorithms)) {
@@ -192,7 +184,6 @@ class Otp implements OtpInterface
         
         return $this;
     }
-    // */
     
     /**
      * Get the algorithms name (lowercase)
@@ -330,7 +321,7 @@ class Otp implements OtpInterface
      */
     private function truncate($hash)
     {
-        $offset = ord($hash[19]) & 0xf;
+        $offset = ord($hash[strlen($hash)-1]) & 0xf;
         
         return (
             ((ord($hash[$offset+0]) & 0x7f) << 24 ) |

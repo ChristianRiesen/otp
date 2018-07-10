@@ -17,7 +17,7 @@ class OtpTest extends TestCase
 	private $Otp;
 	
 	private $secret = "12345678901234567890";
-	
+
 	/**
 	 * Prepares the environment before running a test.
 	 */
@@ -57,10 +57,31 @@ class OtpTest extends TestCase
 	 */
 	public function totpTestValues()
 	{
+		// https://www.rfc-editor.org/errata_search.php?rfc=6238
+		$secretSha1   = '12345678901234567890';
+		$secretSha256 = '12345678901234567890123456789012';
+		$secretSha512 = '1234567890123456789012345678901234567890123456789012345678901234';
+
 		return [
-				 ['94287082', 59], ['07081804', 1111111109], ['14050471', 1111111111],
-				 ['89005924', 1234567890], ['69279037', 2000000000], ['65353130', 20000000000],
-			   ];
+			['sha1',   $secretSha1,   '94287082', 59],
+			['sha1',   $secretSha1,   '07081804', 1111111109],
+			['sha1',   $secretSha1,   '14050471', 1111111111],
+			['sha1',   $secretSha1,   '89005924', 1234567890],
+			['sha1',   $secretSha1,   '69279037', 2000000000],
+			['sha1',   $secretSha1,   '65353130', 20000000000],
+			['sha256', $secretSha256, '46119246', 59],
+			['sha256', $secretSha256, '68084774', 1111111109],
+			['sha256', $secretSha256, '67062674', 1111111111],
+			['sha256', $secretSha256, '91819424', 1234567890],
+			['sha256', $secretSha256, '90698825', 2000000000],
+			['sha256', $secretSha256, '77737706', 20000000000],
+			['sha512', $secretSha512, '90693936', 59],
+			['sha512', $secretSha512, '25091201', 1111111109],
+			['sha512', $secretSha512, '99943326', 1111111111],
+			['sha512', $secretSha512, '93441116', 1234567890],
+			['sha512', $secretSha512, '38618901', 2000000000],
+			['sha512', $secretSha512, '47863826', 20000000000],
+		];
 	}
 
 	/**
@@ -129,43 +150,16 @@ class OtpTest extends TestCase
 	 *
 	 * @dataProvider totpTestValues
 	 */
-	public function testTotpRfc($key, $time)
+	public function testTotpRfc($algo, $secret, $key, $time)
 	{
-		$secret = $this->secret;
-		
 		// Test vectors are in 8 digits
 		$this->Otp->setDigits(8);
 		
 		// The time presented in the test vector has to be first divided through 30
 		// to count as the key
 
-		// SHA 1 grouping
-		$this->assertEquals($key, $this->Otp->hotp($secret, floor($time/30)), "sha 1 with $time");
-
-		
-		/*
-		The following tests do NOT pass.
-		Once the otp class can deal with these correctly, they can be used again.
-		They are here for completeness test vectors from the RFC.
-		
-		// SHA 256 grouping
-		$this->Otp->setAlgorithm('sha256');
-		$this->assertEquals('46119246', $this->Otp->hotp($secret,          floor(59/30)), 'sha256 with time 59');
-		$this->assertEquals('07081804', $this->Otp->hotp($secret,  floor(1111111109/30)), 'sha256 with time 1111111109');
-		$this->assertEquals('14050471', $this->Otp->hotp($secret,  floor(1111111111/30)), 'sha256 with time 1111111111');
-		$this->assertEquals('89005924', $this->Otp->hotp($secret,  floor(1234567890/30)), 'sha256 with time 1234567890');
-		$this->assertEquals('69279037', $this->Otp->hotp($secret,  floor(2000000000/30)), 'sha256 with time 2000000000');
-		$this->assertEquals('65353130', $this->Otp->hotp($secret, floor(20000000000/30)), 'sha256 with time 20000000000');
-		
-		// SHA 512 grouping
-		$this->Otp->setAlgorithm('sha512');
-		$this->assertEquals('90693936', $this->Otp->hotp($secret,          floor(59/30)), 'sha512 with time 59');
-		$this->assertEquals('25091201', $this->Otp->hotp($secret,  floor(1111111109/30)), 'sha512 with time 1111111109');
-		$this->assertEquals('99943326', $this->Otp->hotp($secret,  floor(1111111111/30)), 'sha512 with time 1111111111');
-		$this->assertEquals('93441116', $this->Otp->hotp($secret,  floor(1234567890/30)), 'sha512 with time 1234567890');
-		$this->assertEquals('38618901', $this->Otp->hotp($secret,  floor(2000000000/30)), 'sha512 with time 2000000000');
-		$this->assertEquals('47863826', $this->Otp->hotp($secret, floor(20000000000/30)), 'sha512 with time 20000000000');
-		*/
+		$this->Otp->setAlgorithm($algo);
+		$this->assertEquals($key, $this->Otp->hotp($secret, floor($time/30)), "$algo with $time");
 	}
 
 	/**
