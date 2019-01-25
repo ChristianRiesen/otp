@@ -16,7 +16,7 @@
     "require": {
         "php": ">=5.4.0",
         "paragonie/constant_time_encoding": "^1|^2",
-        "paragonie/random_compat": "^1|^2",
+        "paragonie/random_compat": ">=1",
         "symfony/polyfill-php56": "^1"
     },
     "require-dev": {
