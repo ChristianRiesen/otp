@@ -71,7 +71,7 @@ Implements hotp according to [RFC4226](https://tools.ietf.org/html/rfc4226) and 
 Class GoogleAuthenticator
 -------------------------
 
-Static function class to generate a correct url for the QR code, so you can easy scan it with your device. Google Authenticator is avaiaible as application for iPhone and Android. This removes the burden to create such an app from the developers of websites by using this set of classes.
+Static function class to generate a correct url for the QR code, so you can easily scan it with your device. Google Authenticator is available as an application for iPhone and Android. This removes the burden to create such an app from the developers of websites by using this set of classes.
 
 There are also older open source versions of the Google Authenticator app for both [iPhone](https://github.com/google/google-authenticator) and [Android](https://github.com/google/google-authenticator-android).
 
@@ -97,5 +97,5 @@ Acknowledgements
 
 The classes have been inspired by many different places that were talking about otp and Google Authenticator. Thank you all for your help.
 
-Project setup ideas blantently taken from https://github.com/Seldaek/monolog
+Project setup ideas blatantly taken from https://github.com/Seldaek/monolog
 

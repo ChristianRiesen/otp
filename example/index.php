@@ -72,7 +72,7 @@ Output:<br />
 <?php
 
 if (isset($_POST['otpkey'])) {
-	// Sanatizing, this should take care of it
+	// Sanitizing, this should take care of it
 	$key = preg_replace('/[^0-9]/', '', $_POST['otpkey']);
 	
 	// Standard is 6 for keys, but can be changed with setDigits on $otp
