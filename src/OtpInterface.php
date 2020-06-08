@@ -68,7 +68,7 @@ interface OtpInterface
      * Checks Totp agains a key
      *
      * @param string  $secret    Base32 Secret String
-     * @param integer $key       User supplied key
+     * @param string  $key       User supplied key
      * @param integer $timedrift How large a drift to use beyond exact match
      *
      * @return boolean True if key is correct within time drift
