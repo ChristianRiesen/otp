@@ -100,7 +100,7 @@ class GoogleAuthenticator
             $otpauth .= '&issuer=' . rawurlencode($options['issuer']);
         }
 
-        // image (to accepts images for freeotp)
+        // image (to accept images for freeotp)
         if (array_key_exists('image', $options)) {
             $otpauth .= '&image=' . $options['image'];
         }

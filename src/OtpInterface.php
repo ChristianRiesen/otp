@@ -65,7 +65,7 @@ interface OtpInterface
     function checkHotpResync($secret, $counter, $key, $counterwindow = 2);
 
     /**
-     * Checks Totp agains a key
+     * Checks Totp against a key
      *
      * @param string  $secret    Base32 Secret String
      * @param string  $key       User supplied key

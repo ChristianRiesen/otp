@@ -196,7 +196,7 @@ class Otp implements OtpInterface
     }
     
     /**
-     * Setting period lenght for totp
+     * Setting period length for totp
      *
      * @param integer $period
      * @throws \InvalidArgumentException
